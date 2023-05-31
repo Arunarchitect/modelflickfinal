@@ -1,7 +1,7 @@
 from typing import Any, Dict
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import ListView, DetailView, DeleteView
+from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from .models import Article
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -12,7 +12,7 @@ class Index(ListView):
     model = Article
     queryset = Article.objects.all().order_by('-date')
     template_name = 'blog/index.html'
-    paginate_by = 1
+    paginate_by = 3
 
 class Featured(ListView):
     model = Article
@@ -53,3 +53,13 @@ class DeleteArticleView(LoginRequiredMixin, UserPassesTestMixin,  DeleteView):
         return self.request.user.id == article.author.id
 
     
+class AddPostView(CreateView):
+    model = Article
+    template_name = 'blog/add_post.html'
+    fields = '__all__'
+
+class EditPostView(UpdateView):
+    model = Article
+    template_name = 'blog/edit_post.html'
+    fields = ['title', 'content']
+
